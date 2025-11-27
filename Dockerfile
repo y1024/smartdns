@@ -6,6 +6,8 @@ ARG OPENSSL_VER=3.4.2
 RUN apt update && \
     apt install -y binutils perl curl make gcc nodejs npm clang wget unzip ca-certificates && \
     update-ca-certificates && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    node --version && npm --version && \
     \
     curl https://sh.rustup.rs -sSf | sh -s -- -y && \
     export PATH="$HOME/.cargo/bin:$PATH" && \
@@ -36,7 +38,7 @@ COPY . /build/smartdns/
 RUN cd /build/smartdns && \
     export CFLAGS="-I /opt/build/include" && \
     export LDFLAGS="-L /opt/build/lib -L /opt/build/lib64" && \
-    export PATH="$HOME/.cargo/bin:$PATH" && \
+    export PATH="$HOME/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" && \
     rm -fr /build/smartdns/package/*.tar.gz && \
     sh ./package/build-pkg.sh --platform linux --arch `dpkg --print-architecture` --with-ui --static && \
     \
